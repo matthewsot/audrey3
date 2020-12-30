@@ -1,0 +1,4 @@
+.*.sw*
+private/*
+main.rkt
+!private/README.md
