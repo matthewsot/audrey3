@@ -4,7 +4,7 @@
 
 (provide ActionListSource)
 
-; Each named-action should be a pair ("name" . feeddef)
+; Each named-action should be a pair ("name" . feeddef).
 (define ActionListSource
   (lambda named-actions
     (lambda (filter [force-refresh? #f])

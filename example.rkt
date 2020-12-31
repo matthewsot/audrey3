@@ -7,10 +7,11 @@
          "sources/hn-discussions.rkt"
          "sources/hn-comments.rkt"
          "sources/action-list.rkt"
+         "sources/read-later-list.rkt"
          "printers/print.rkt"
          "printers/webpage.rkt"
          db
-         racket/date
+         srfi/19
          racket/system)
 
 ; This is where we will save our labels and metadata for any items that we want
@@ -30,13 +31,20 @@
 ; This generates a label to mark things we want to read today. Note that it's
 ; important this is a method, so it will update even if we leave Audrey3
 ; running for multiple days.
+(define date-format "~A, ~m/~d/~Y")
 (define (read-today-label)
-  (string-append "read-later:" (date->string (current-date))))
+  (string-append "read-later:" (date->string (current-date) date-format)))
 
 (define (read-today-feeddef)
   `(and (source Local)
         (has-label? ,(read-today-label))
         (not (has-label? "ignore"))))
+
+; This creates a source that reads all of the read-later:(date) labels and
+; allows us to select from them. Note that currently the label date format must
+; match @date-format.
+(register-source
+  'ReadLaterDays (ReadLaterListSource date-format 'Local LocalDB))
 
 ; An ActionListSource lets you present a pre-set list of UI actions as items.
 (register-source
@@ -50,7 +58,8 @@
                        (> (attr "timestamp") (- (now) (days 1)))
                        (> (attr "num-comments") 5)
                        (not (has-label? "triaged")))))
-    `("ReadToday" . (open-feed ',(read-today-feeddef)))))
+    `("Read Today" . (open-feed ',(read-today-feeddef)))
+    `("All Read-Later-Days" . (open-feed '(source ReadLaterDays)))))
 
 ; This method takes an item and attempts to print it using the listed printers.
 ; The default print-webpage printer calls wkhtmltopdf.
