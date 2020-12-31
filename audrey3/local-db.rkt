@@ -14,10 +14,12 @@
                              #:mode 'create)])
     (query-exec db "CREATE TABLE IF NOT EXISTS
                     label_pairs(attribute TEXT, value TEXT, label TEXT,
+                                insert_time DEFAULT CURRENT_TIMESTAMP,
                                 UNIQUE(attribute, value, label))")
     (query-exec db "CREATE TABLE IF NOT EXISTS
                     local_items(meta_id BLOB,
                                 racket_code BLOB,
+                                insert_time DEFAULT CURRENT_TIMESTAMP,
                                 UNIQUE(meta_id))")
     (query-exec db "CREATE TABLE IF NOT EXISTS
                     local_item_attributes(
