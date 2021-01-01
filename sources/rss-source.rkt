@@ -41,6 +41,10 @@
       #:when (and (string? descr) (not (member 'descr already-seen)))
       `(("description" . ,descr) .
         ,(parse-out-attrs rest `(descr . ,already-seen)))]
+    [`((link ,attrs ,url) ,rest ...)
+      #:when (and (string? url) (not (member 'url already-seen)))
+      `(("url" . ,url) .
+        ,(parse-out-attrs rest `(url . ,already-seen)))]
     [`((,(or 'pubDate 'published) ,attrs ,date-str) ,rest ...)
       #:when (and (string? date-str) (not (member 'timestamp already-seen)))
       (let ([format (pick-format date-str)])
