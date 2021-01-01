@@ -1,10 +1,11 @@
 #lang racket
 
-(require "lview.rkt")
-(require "filter.rkt")
-(require "feed-item.rkt")
-(require "feeddef.rkt")
-(require racket/serialize)
+(require "lview.rkt"
+         "utils.rkt"
+         "filter.rkt"
+         "feed-item.rkt"
+         "feeddef.rkt"
+         racket/serialize)
 
 (provide build-feed
          read-feed
@@ -29,5 +30,6 @@
     (struct-copy feed current-feed [items items])))
 
 (define (feed->lview feed start-line n-lines selected-index)
-  (let ([items (map feed-item-title (feed-items feed))])
+  (let* ([items (map feed-item-title (feed-items feed))]
+         [selected-index (clip selected-index 0 (sub1 (length items)))])
     (lview items start-line n-lines selected-index)))

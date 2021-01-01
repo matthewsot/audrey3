@@ -78,7 +78,7 @@
     [`(pager-next)  (update-state state 'pager pager-next-line)]
     [`(pager-prev)  (update-state state 'pager pager-prev-line)]
     [`(fetch-current-feed ,force?)
-      (set-state-feed state (read-feed (state-get state 'feed) force?) #f)]
+      (set-state-feed state (read-feed (state-get state 'feed) force?) #f #t)]
     [`(quit) #f]
     [`(history-back)
       (let ([new-state (state-get state 'checkpoint)])
@@ -141,8 +141,11 @@
     [`(,rator ,rands ...)
       (apply (ui-eval rator state) (map (curryr ui-eval state) rands))]))
 
-(define (set-state-feed state feed checkpoint?)
-  (let* ([lview (feed->lview feed 2 (feed-full-size) 0)]
+(define (set-state-feed state feed checkpoint? [keep-selected? #f])
+  (let* ([selected-index (if keep-selected?
+                             (lview-selected-index (state-get state 'lview))
+                             0)]
+         [lview (feed->lview feed 2 (feed-full-size) selected-index)]
          [restore (if checkpoint? state (state-get state 'checkpoint))])
     (draw-lview lview)
     (write-header (format "~a" restore))
