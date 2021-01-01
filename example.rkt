@@ -10,6 +10,7 @@
          "sources/read-later-list.rkt"
          "printers/print.rkt"
          "printers/webpage.rkt"
+         "printers/download.rkt"
          db
          racket/date
          racket/system)
@@ -60,7 +61,7 @@
 
 ; This method takes an item and attempts to print it using the listed printers.
 ; The default print-webpage printer calls wkhtmltopdf.
-(define print-item (curryr try-print-item `(,print-webpage)))
+(define print-item (curryr try-print-item `(,print-webpage ,download-url)))
 
 ; Now we register actions to be performed on certain context-keypress
 ; combinations.
