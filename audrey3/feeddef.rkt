@@ -2,13 +2,18 @@
 
 ; For check-filter in feeddef->sources.
 (require "filter.rkt")
-(provide register-source
-         all-sources
+(provide register-sources
+         register-source
          feeddef->sources)
 
 (define SOURCES (make-hash))
 (define (register-source name source) (hash-set! SOURCES name source))
-(define (all-sources) `(sources . ,(hash-keys SOURCES)))
+(define-syntax register-sources
+  (syntax-rules ()
+    [(register-sources) (void)]
+    [(register-sources [name source] r ...)
+     (begin (register-source name source)
+            (register-sources r ...))]))
 
 (define (feeddef->sources expr db)
   (hash-map

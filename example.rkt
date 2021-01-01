@@ -20,13 +20,17 @@
 
 ; Registering a source makes its name available for use in the (source ...)
 ; feeddef command.
-(register-source 'ReutersEcon
-  (RSSSource
-    "https://www.reutersagency.com/feed/?best-sectors=economy&post_type=best"))
-(register-source 'Local (LocalDBSource LocalDB))
-(register-source 'HN HNSource)
-(register-source 'HNDiscussions HNDiscussionSource)
-(register-source 'HNComments HNCommentSource)
+(register-sources
+  ['ReutersEcon
+   (RSSSource
+     "https://www.reutersagency.com/feed/?best-sectors=economy&post_type=best")]
+  ['Local (LocalDBSource LocalDB)]
+  ['HN HNSource]
+  ['HNDiscussions HNDiscussionSource]
+  ['HNComments HNCommentSource]
+  ; This creates a source that reads all of the read-later:(date) labels and
+  ; allows us to select from them.
+  ['ReadLaterDays (ReadLaterListSource 'Local LocalDB)])
 
 ; This generates a label to mark things we want to read today. Note that it's
 ; important this is a method, so it will update even if we leave Audrey3
@@ -39,24 +43,20 @@
         (has-label? ,(read-today-label))
         (not (has-label? "ignore"))))
 
-; This creates a source that reads all of the read-later:(date) labels and
-; allows us to select from them.
-(register-source 'ReadLaterDays (ReadLaterListSource 'Local LocalDB))
-
 ; An ActionListSource lets you present a pre-set list of UI actions as items.
-(register-source
-  'Main
-  (ActionListSource
-    '("Reuters Econ Feed" .
-      (open-feed '(and (source ReutersEcon)
-                       (not (has-label? "triaged")))))
-    '("HN Popular Today" .
-      (open-feed '(and (source HN)
-                       (> (attr "timestamp") (- (now) (days 1)))
-                       (> (attr "num-comments") 5)
-                       (not (has-label? "triaged")))))
-    `("Read Today" . (open-feed ',(read-today-feeddef)))
-    `("All Read-Later-Days" . (open-feed '(source ReadLaterDays)))))
+(register-sources
+  ['Main
+   (ActionListSource
+     '("Reuters Econ Feed" .
+       (open-feed '(and (source ReutersEcon)
+                        (not (has-label? "triaged")))))
+     '("HN Popular Today" .
+       (open-feed '(and (source HN)
+                        (> (attr "timestamp") (- (now) (days 1)))
+                        (> (attr "num-comments") 5)
+                        (not (has-label? "triaged")))))
+     `("Read Today" . (open-feed ',(read-today-feeddef)))
+     `("All Read-Later-Days" . (open-feed '(source ReadLaterDays))))])
 
 ; This method takes an item and attempts to print it using the listed printers.
 ; The default print-webpage printer calls wkhtmltopdf.
