@@ -109,6 +109,10 @@
       (edit (ui-eval template state) (ui-eval sexpr state))]
     [`(car ,l) (car (ui-eval l state))]
     [`(edit ,template) (ui-eval `(edit ,template #f) state)]
+    [`(relayout)
+      ; Closing the pager forces the lview to resize (currently, even if it's
+      ; not open in the first place).
+      (ui-eval `(close-pager) state)]
     [`(passes ,filter ,item)
       (check-filter (ui-eval filter state)
                     (ui-eval item state)
@@ -132,6 +136,7 @@
                    ['lview smaller-lview]
                    ['pager item-pager]))]
     [`(close-pager)
+      ; NOTE: Before editing, make sure it still works with (relayout).
       (let ([lview (lview-resize (state-get state 'lview) (feed-full-size))])
         (state-set state
                    ['context 'feed]

@@ -63,6 +63,12 @@ such discussions). On each of those discussions, you can either `p`rint the HN
 discussion page as a PDF, or press `return` to show each comment as its own
 item in a new feed from within Audrey3.
 
+### Resizing the Terminal
+Currently, we have no way of automatically handling terminal resizes.
+Eventually we should use the `unix-signals` package to catch `SIGWINCH` and
+resize on that. Until then, the default configuration allows you to press `z`
+to force a relayout (currently, this will also close any open item view).
+
 #### Error Messages
 Fair warning, I don't have any good handler for error messages right now. So it
 just crashes. What's worse, `charterm` seems to put the terminal in a different

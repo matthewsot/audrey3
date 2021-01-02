@@ -70,6 +70,7 @@
    [ctrl-c '(quit)]
    [#\M '(begin (open-feed '(source Main))
                 (reset-history))]
+   [#\z '(relayout)]
    [_ `(write-header "Key not found.")])
   ([feed pager]
    [#\g '(*-first)]
