@@ -1,6 +1,7 @@
 #lang racket
 
-(require racket/set)
+(require racket/set
+         racket/date)
 (provide abstract-filter)
 
 ; Returns an over-approximation of filter. This is pretty coarse, but it's fine
@@ -62,6 +63,9 @@
          [`,n #:when (number? n) n]
          [`,s #:when (string? s) s]
          [`(now) (current-seconds)]
+         [`(today) (date->seconds
+                     (struct-copy date (current-date)
+                                  [second 0] [hour 0] [minute 0]))]
          [`(- ,a ,b) (- (abstract-value a) (abstract-value b))]
          [`(days ,n) (* (* 60 60 24) (abstract-value n))]
          [_ #t]))

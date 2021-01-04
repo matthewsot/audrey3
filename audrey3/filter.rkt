@@ -1,8 +1,9 @@
 #lang racket
 
-(require "local-db.rkt")
-(require "feed-item.rkt")
-(require "utils.rkt")
+(require "local-db.rkt"
+         "feed-item.rkt"
+         "utils.rkt"
+         racket/date)
 
 (provide check-filter)
 
@@ -50,6 +51,12 @@
          [`(attr ,key)
            (feed-item->attr-value item (eval-filter key item))]
          [`(now) (current-seconds)]
+         ; Using (today) allows you to cache things for longer than (now).
+         ; Alternatively, maybe web-cache should index on something other than
+         ; the raw URL.
+         [`(today) (date->seconds
+                     (struct-copy date (current-date)
+                                  [second 0] [hour 0] [minute 0]))]
          [`(- ,a ,b) (- (eval-filter a item) (eval-filter b item))]
          [`(days ,n) (* (* 60 60 24) (eval-filter n item))]
          [_ expr]))

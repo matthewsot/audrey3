@@ -53,7 +53,7 @@
                         (not (has-label? "triaged")))))
      '("HN Popular Today" .
        (open-feed '(and (source HN)
-                        (> (attr "timestamp") (- (now) (days 1)))
+                        (> (attr "timestamp") (- (today) (days 1)))
                         (> (attr "num-comments") 5)
                         (not (has-label? "triaged")))))
      `("Read Today" . (open-feed ',(read-today-feeddef)))
