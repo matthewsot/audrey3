@@ -20,8 +20,9 @@
     (feeddef->source-dnf expr)
     (lambda (source fltr)
       (lambda ([force-refresh #f])
-        (filter (lambda (item) (check-filter fltr item db))
-                (source fltr force-refresh))))))
+        (map (curryr cons fltr)
+          (filter (lambda (item) (check-filter fltr item db))
+                  (source fltr force-refresh)))))))
 
 ; NOTE: This just expands at most one top-level macro, it doesn't recurse.
 (define (expand-macros expr)

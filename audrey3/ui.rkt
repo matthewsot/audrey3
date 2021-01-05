@@ -79,6 +79,11 @@
     [`(pager-prev)  (update-state state 'pager pager-prev-line)]
     [`(fetch-current-feed ,force?)
       (set-state-feed state (read-feed (state-get state 'feed) force?) #f #t)]
+    [`(refilter-current-feed)
+      (set-state-feed
+        state
+        (refilter-feed (state-get state 'feed) (state-get state 'db))
+        #f #t)]
     [`(quit) #f]
     [`(history-back)
       (let ([new-state (state-get state 'checkpoint)])

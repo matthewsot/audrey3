@@ -51,9 +51,6 @@
          [`(attr ,key)
            (feed-item->attr-value item (eval-filter key item))]
          [`(now) (current-seconds)]
-         ; Using (today) allows you to cache things for longer than (now).
-         ; Alternatively, maybe web-cache should index on something other than
-         ; the raw URL.
          [`(today) (date->seconds
                      (struct-copy date (current-date)
                                   [second 0] [hour 0] [minute 0]))]

@@ -87,12 +87,12 @@
    [#\q '(history-back)]
    [#\f `(fetch-current-feed #t)]
    [#\I `(begin (give-label (current-item) "triaged" "url")
-                (fetch-current-feed #f))]
+                (refilter-current-feed))]
    [#\R `(begin (save-item (current-item))
                 (give-label (current-item) "read-later" "url")
                 (give-label (current-item) "triaged" "url")
                 (give-label (current-item) (,read-today-label) "url")
-                (fetch-current-feed #f))]
+                (refilter-current-feed))]
    [#\* `(open-feed (,read-today-feeddef))]
    [#\e `(open-feed
            (car (edit "templates/edit-feeddef.rkt" (current-feeddef))))]
