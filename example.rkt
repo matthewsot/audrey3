@@ -56,7 +56,7 @@
                         (> (attr "timestamp") (- (today) (days 1)))
                         (> (attr "num-comments") 5)
                         (not (has-label? "triaged")))))
-     `("Read Today" . (open-feed ',(read-today-feeddef)))
+     `("Read Today" . (open-feed ,`(,read-today-feeddef)))
      `("All Read-Later-Days" . (open-feed '(source ReadLaterDays))))])
 
 ; This method takes an item and attempts to print it using the listed printers.
