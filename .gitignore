@@ -1,4 +1,5 @@
 .*.sw*
 private/*
 main.rkt
+!audrey3/main.rkt
 !private/README.md
