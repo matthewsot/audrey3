@@ -14,13 +14,17 @@
     (let* ([port (get-cached-port url force-refresh)]
            [xexpr (xml->xexpr (document-element (read-xml port)))]
            [channels (parse-rss xexpr)]
-           [items (rss-channel-items (car channels))])
+           [items (append-map rss-channel-items channels)])
       (close-input-port port)
       items)))
 
 (struct rss-channel (title description items) #:transparent)
 
-(define (parse-rss xexpr) (map parse-channel (find-children 'channel xexpr)))
+(define (parse-rss xexpr)
+  ; Some RSS feeds drop the items directly under the <rdf> (see: arXiv) while
+  ; others wrap them in a <channel>. This picks up both.
+  (cons (parse-channel xexpr)
+        (map parse-channel (find-children 'channel xexpr))))
 (define (parse-channel xexpr)
   (rss-channel (se-path* '(channel title) xexpr)
                (se-path* '(channel description) xexpr)
